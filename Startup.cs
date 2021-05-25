@@ -6,6 +6,8 @@ using IdentityApp.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +31,16 @@ namespace IdentityApp
             services.AddHttpsRedirection(opts => {
                 opts.HttpsPort = 44350;
             });
+
+            services.AddDbContext<IdentityDbContext>(opts => {
+                opts.UseSqlServer(
+                    Configuration.GetConnectionString("IdentityConnection"),
+                    opts => opts.MigrationsAssembly("IdentityApp"));
+                
+            });
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddEntityFrameworkStores<IdentityDbContext>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
