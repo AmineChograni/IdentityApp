@@ -26,6 +26,9 @@ namespace IdentityApp
             services.AddDbContext<ProductDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("AppDataConnection")));
+            services.AddHttpsRedirection(opts => {
+                opts.HttpsPort = 44350;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -35,9 +38,14 @@ namespace IdentityApp
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthorization();
+            app.UseAuthentication();
+
 
             app.UseEndpoints(endpoints =>
             {
